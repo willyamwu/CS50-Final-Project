@@ -1,0 +1,19 @@
+{% extends "quote.html" %}
+
+{% block quote %}
+    <table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ data['name'] }}</td>
+                <td>{{ data['price'] | usd }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

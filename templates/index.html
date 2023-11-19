@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+    <h1> Welcome, {{ username }}</h1>
+    <h2>Current Net Worth: {{ total_net_worth| usd }}</h2>
+    <h2>Current Cash Balance: {{ cash | usd }}</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Price</th>
+                <th>Shares</th>
+                <th>Total Holdings</th>
+            </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through the database entries to display them in this table -->
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.symbol }}</td>
+                    <td>{{ row.price | usd }}</td>
+                    <td>{{ row.shares }}</td>
+                    <td>{{ row.total_holdings | usd }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
