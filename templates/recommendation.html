@@ -1,15 +1,26 @@
-{% extends "layout.html" %} {% block title %} Recommendation {% endblock %} {%
-block main %}
-<h1>Welcome, {{ username }}</h1>
-{% if movies %}
-<ul>
-  {% for movie in movies %}
-  <li>
-    {{ movie.title }} - Genre: {{ movie.genre }}, Length: {{ movie.length }}
-    min, Rating: {{ movie.rating }}
-  </li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>No movies match your criteria.</p>
-{% endif %} {% endblock %}
+{% extends "layout.html" %} {% block title %} Movie Recommendations {% endblock
+%} {% block main %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Your Movie Recommendations</h2>
+  <div class="recommendation-list">
+    {% if movies %}
+    <ul class="list-group">
+      {% for movie in movies %}
+      <li class="list-group-item">
+        <div class="movie-details">
+          <h3>{{ movie.title }}</h3>
+          <p>
+            <strong>Genre:</strong> {{ movie.genre }},
+            <strong>Length:</strong> {{ movie.length }} min,
+            <strong>Rating:</strong> {{ movie.rating }}
+          </p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-center">No movies match your criteria.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

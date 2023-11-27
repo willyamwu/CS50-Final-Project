@@ -1,42 +1,43 @@
 {% extends "layout.html" %} {% block title %} Movie Recommender {% endblock %}
 {% block main %}
-<div class="container mt-5">
-  <h2 class="mb-4">Find Your Movie</h2>
-  <form action="/recommend" method="post" class="movie-form">
-    <div class="form-group">
-      <label for="genre">Select Genre:</label>
-      <select class="form-control" name="genre" id="genre" required>
-        <option value="action">Action</option>
-        <option value="comedy">Comedy</option>
-        <option value="drama">Drama</option>
-        <!-- Add more genre options as needed -->
-      </select>
-    </div>
+<div class="background-box">
+  <h1>Movie Preferences</h1>
 
-    <div class="form-group">
-      <label for="length">Max Length (minutes):</label>
-      <input
-        type="number"
-        class="form-control"
-        name="length"
-        id="length"
-        required
-      />
-    </div>
+  <form action="/form" method="post">
+    <h2>Genre</h2>
+    <label>
+      <input class="checkbox" type="checkbox" name="genre" value="action" />
+      Action
+    </label>
+    <label>
+      <input class="checkbox" type="checkbox" name="genre" value="comedy" />
+      Comedy
+    </label>
+    <label>
+      <input class="checkbox" type="checkbox" name="genre" value="drama" />
+      Drama
+    </label>
+    <label>
+      <input class="checkbox" type="checkbox" name="genre" value="sci-fi" />
+      Sci-Fi
+    </label>
+    <label>
+      <input class="checkbox" type="checkbox" name="genre" value="horror" />
+      Horror
+    </label>
 
-    <div class="form-group">
-      <label for="rating">Min Rating:</label>
-      <input
-        type="number"
-        step="0.1"
-        class="form-control"
-        name="rating"
-        id="rating"
-        required
-      />
-    </div>
+    <label>
+      Preferred Length (minutes):
+      <input type="number" name="length" min="0" step="1" />
+    </label>
 
-    <button type="submit" class="btn btn-primary">Get Recommendations</button>
+    <label>
+      Rating (1-10):
+      <input type="number" name="rating" min="1" max="10" step="1" />
+    </label>
+
+    <button type="submit">Submit</button>
   </form>
 </div>
+
 {% endblock %}

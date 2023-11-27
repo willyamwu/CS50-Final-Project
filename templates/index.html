@@ -1,21 +1,11 @@
 {% extends "layout.html" %} {% block title %} Index {% endblock %} {% block main
 %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="styles.css" />
-    <title>Your Homepage</title>
-  </head>
 
-  <body>
-    <div id="welcome-container">
-      <h1>Movie Magic</h1>
-      <button id="start-button" onclick="location.href='INSERT LINK'">
-        Find a movie!
-      </button>
-    </div>
-  </body>
-</html>
+<div id="welcome-container">
+  <h1>Movie Magic</h1>
+  <p>Don't know what to watch? Click the button.</p>
+  <button id="start-button" onclick="location.href='/form'">
+    Find a movie!
+  </button>
+</div>
 {% endblock %}

@@ -62,83 +62,83 @@ def index():
     )
 
 
-@app.route("/buy", methods=["GET", "POST"])
-@login_required
-def buy():
-    """Buy shares of stock"""
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-        # Ensure symbol was submitted
-        if not request.form.get("symbol"):
-            return apology("must provide symbol", 403)
-        # Ensure symbol is valied
-        elif lookup(request.form.get("symbol")) is None:
-            return apology("invalid symbol")
-        # Ensure shares was submitted
-        elif not request.form.get("shares"):
-            return apology("must provide shares", 403)
-        # Ensure shares are positive whole numbers
-        elif request.form.get("shares").isdigit() == False:
-            return apology("shares must be positive whole number")
+# @app.route("/buy", methods=["GET", "POST"])
+# @login_required
+# def buy():
+#     """Buy shares of stock"""
+#     # User reached route via POST (as by submitting a form via POST)
+#     if request.method == "POST":
+#         # Ensure symbol was submitted
+#         if not request.form.get("symbol"):
+#             return apology("must provide symbol", 403)
+#         # Ensure symbol is valied
+#         elif lookup(request.form.get("symbol")) is None:
+#             return apology("invalid symbol")
+#         # Ensure shares was submitted
+#         elif not request.form.get("shares"):
+#             return apology("must provide shares", 403)
+#         # Ensure shares are positive whole numbers
+#         elif request.form.get("shares").isdigit() == False:
+#             return apology("shares must be positive whole number")
 
-        user_data = db.execute(
-            "SELECT * FROM users WHERE id = ?", session["user_id"])
-        shares = int(request.form.get("shares"))
-        # Gets the current stock price of the symbol
-        stock_price = lookup(request.form.get("symbol"))["price"]
+#         user_data = db.execute(
+#             "SELECT * FROM users WHERE id = ?", session["user_id"])
+#         shares = int(request.form.get("shares"))
+#         # Gets the current stock price of the symbol
+#         stock_price = lookup(request.form.get("symbol"))["price"]
 
-        # Ensure that the amount the user is trying to purchase is less than the amount of cash they have
-        if stock_price * int(request.form.get("shares")) > user_data[0]["cash"]:
-            return apology("too broke to afford the stock")
+#         # Ensure that the amount the user is trying to purchase is less than the amount of cash they have
+#         if stock_price * int(request.form.get("shares")) > user_data[0]["cash"]:
+#             return apology("too broke to afford the stock")
 
-        # Add the trade to the trades table.
-        db.execute(
-            "INSERT INTO trades (user_id, symbol, shares, price, time) VALUES (:user_id, :symbol, :shares, :price, :time)",
-            user_id=user_data[0]["id"],
-            symbol=request.form.get("symbol"),
-            shares=shares,
-            price=stock_price,
-            time=datetime.now(),
-        )
+#         # Add the trade to the trades table.
+#         db.execute(
+#             "INSERT INTO trades (user_id, symbol, shares, price, time) VALUES (:user_id, :symbol, :shares, :price, :time)",
+#             user_id=user_data[0]["id"],
+#             symbol=request.form.get("symbol"),
+#             shares=shares,
+#             price=stock_price,
+#             time=datetime.now(),
+#         )
 
-        # Update the cash the user has.
-        db.execute(
-            "UPDATE users SET cash = ? WHERE id = ?",
-            user_data[0]["cash"] - (stock_price * shares),
-            session["user_id"],
-        )
+#         # Update the cash the user has.
+#         db.execute(
+#             "UPDATE users SET cash = ? WHERE id = ?",
+#             user_data[0]["cash"] - (stock_price * shares),
+#             session["user_id"],
+#         )
 
-        # Redirect user to home page
-        return redirect("/")
+#         # Redirect user to home page
+#         return redirect("/")
 
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("buy.html")
+#     # User reached route via GET (as by clicking a link or via redirect)
+#     else:
+#         return render_template("buy.html")
 
 
-@app.route("/history")
-@login_required
-def history():
-    """Show history of transactions"""
-    # Get the user id of the current user
-    user_id = session["user_id"]
+# @app.route("/history")
+# @login_required
+# def history():
+#     """Show history of transactions"""
+#     # Get the user id of the current user
+#     user_id = session["user_id"]
 
-    # Get all the trades that the user made and order it by putting the most recent at the top.
-    rows = db.execute(
-        "SELECT * FROM trades WHERE user_id = ? ORDER BY time DESC", user_id
-    )
+#     # Get all the trades that the user made and order it by putting the most recent at the top.
+#     rows = db.execute(
+#         "SELECT * FROM trades WHERE user_id = ? ORDER BY time DESC", user_id
+#     )
 
-    # Loop through each trade
-    for row in rows:
-        # If the shares are positive, it represents a buy
-        if row["shares"] > 0:
-            row["bs"] = "Buy"
-        # If the shares are megative, it represents a sell
-        else:
-            row["shares"] = -row["shares"]
-            row["bs"] = "Sell"
+#     # Loop through each trade
+#     for row in rows:
+#         # If the shares are positive, it represents a buy
+#         if row["shares"] > 0:
+#             row["bs"] = "Buy"
+#         # If the shares are megative, it represents a sell
+#         else:
+#             row["shares"] = -row["shares"]
+#             row["bs"] = "Sell"
 
-    return render_template("history.html", rows=rows)
+#     return render_template("history.html", rows=rows)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -192,30 +192,30 @@ def logout():
     return redirect("/")
 
 
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get stock quote."""
+# @app.route("/quote", methods=["GET", "POST"])
+# @login_required
+# def quote():
+#     """Get stock quote."""
 
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-        symbol = request.form.get("symbol")
+#     # User reached route via POST (as by submitting a form via POST)
+#     if request.method == "POST":
+#         symbol = request.form.get("symbol")
 
-        # Look up the symbol
-        data = lookup(symbol)
+#         # Look up the symbol
+#         data = lookup(symbol)
 
-        # If the function returns none, that means the symbol is not valid.
-        if data is None:
-            # Return this error
-            return apology("Invalid symbol")
+#         # If the function returns none, that means the symbol is not valid.
+#         if data is None:
+#             # Return this error
+#             return apology("Invalid symbol")
 
-        # The symbol is valid
-        else:
-            return render_template("quoted.html", data=data)
+#         # The symbol is valid
+#         else:
+#             return render_template("quoted.html", data=data)
 
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("quote.html")
+#     # User reached route via GET (as by clicking a link or via redirect)
+#     else:
+#         return render_template("quote.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -295,70 +295,84 @@ def register():
 @app.route("/form", methods=["GET", "POST"])
 @login_required
 def form():
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        return render_template("recommendation.html")
     return render_template("form.html")
 
 
-@app.route("/sell", methods=["GET", "POST"])
+@app.route("/recommendation", methods=["GET", "POST"])
 @login_required
-def sell():
-    """Sell shares of stock"""
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-        # Ensure symbol was submitted
-        if not request.form.get("symbol"):
-            return apology("must provide symbol", 403)
-        # Ensure shares was submitted
-        elif not request.form.get("shares"):
-            return apology("must provide shares", 403)
-        # Ensure shares are positive whole numbers
-        elif request.form.get("shares").isdigit() == False:
-            return apology("shares must be positive whole number")
-        # Ensure shares being sold is less than or equal to the number of shares the individual owns
-        elif int(request.form.get("shares")) > int(
-            db.execute(
-                "SELECT SUM(shares) AS shares FROM trades WHERE user_id = ? AND symbol = ?",
-                session["user_id"],
-                request.form.get("symbol"),
-            )[0]["shares"]
-        ):
-            return apology("you are trying to sell too many shares")
+def recommendation():
+    return render_template("recommendation.html")
 
-        # Gather data on the current user
-        user_data = db.execute(
-            "SELECT * FROM users WHERE id = ?", session["user_id"])
-        # Gather the number of shares
-        shares = int(request.form.get("shares"))
 
-        stock_price = lookup(request.form.get("symbol"))["price"]
+@app.route("/featured", methods=["GET", "POST"])
+@login_required
+def featured():
+    return render_template("featured.html")
 
-        # Add. the selling transaction to the trades table
-        db.execute(
-            "INSERT INTO trades (user_id, symbol, shares, price, time) VALUES (:user_id, :symbol, :shares, :price, :time)",
-            user_id=user_data[0]["id"],
-            symbol=request.form.get("symbol"),
-            shares=-shares,
-            price=stock_price,
-            time=datetime.now(),
-        )
+# @app.route("/sell", methods=["GET", "POST"])
+# @login_required
+# def sell():
+#     """Sell shares of stock"""
+#     # User reached route via POST (as by submitting a form via POST)
+#     if request.method == "POST":
+#         # Ensure symbol was submitted
+#         if not request.form.get("symbol"):
+#             return apology("must provide symbol", 403)
+#         # Ensure shares was submitted
+#         elif not request.form.get("shares"):
+#             return apology("must provide shares", 403)
+#         # Ensure shares are positive whole numbers
+#         elif request.form.get("shares").isdigit() == False:
+#             return apology("shares must be positive whole number")
+#         # Ensure shares being sold is less than or equal to the number of shares the individual owns
+#         elif int(request.form.get("shares")) > int(
+#             db.execute(
+#                 "SELECT SUM(shares) AS shares FROM trades WHERE user_id = ? AND symbol = ?",
+#                 session["user_id"],
+#                 request.form.get("symbol"),
+#             )[0]["shares"]
+#         ):
+#             return apology("you are trying to sell too many shares")
 
-        # Update the cash the user has
-        db.execute(
-            "UPDATE users SET cash = ? WHERE id = ?",
-            user_data[0]["cash"] + (stock_price * shares),
-            session["user_id"],
-        )
+#         # Gather data on the current user
+#         user_data = db.execute(
+#             "SELECT * FROM users WHERE id = ?", session["user_id"])
+#         # Gather the number of shares
+#         shares = int(request.form.get("shares"))
 
-        # Redirect user to home page
-        return redirect("/")
+#         stock_price = lookup(request.form.get("symbol"))["price"]
 
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        # Query database for all symbols the user owns
-        rows = db.execute(
-            "SELECT DISTINCT symbol FROM trades WHERE user_id = ?",
-            session["user_id"],
-        )
-        return render_template("sell.html", rows=rows)
+#         # Add. the selling transaction to the trades table
+#         db.execute(
+#             "INSERT INTO trades (user_id, symbol, shares, price, time) VALUES (:user_id, :symbol, :shares, :price, :time)",
+#             user_id=user_data[0]["id"],
+#             symbol=request.form.get("symbol"),
+#             shares=-shares,
+#             price=stock_price,
+#             time=datetime.now(),
+#         )
+
+#         # Update the cash the user has
+#         db.execute(
+#             "UPDATE users SET cash = ? WHERE id = ?",
+#             user_data[0]["cash"] + (stock_price * shares),
+#             session["user_id"],
+#         )
+
+#         # Redirect user to home page
+#         return redirect("/")
+
+#     # User reached route via GET (as by clicking a link or via redirect)
+#     else:
+#         # Query database for all symbols the user owns
+#         rows = db.execute(
+#             "SELECT DISTINCT symbol FROM trades WHERE user_id = ?",
+#             session["user_id"],
+#         )
+#         return render_template("sell.html", rows=rows)
 
 
 @app.route("/changepassword", methods=["GET", "POST"])
