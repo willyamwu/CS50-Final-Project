@@ -1,0 +1,15 @@
+{% extends "layout.html" %} {% block title %} Recommendation {% endblock %} {%
+block main %}
+<h1>Welcome, {{ username }}</h1>
+{% if movies %}
+<ul>
+  {% for movie in movies %}
+  <li>
+    {{ movie.title }} - Genre: {{ movie.genre }}, Length: {{ movie.length }}
+    min, Rating: {{ movie.rating }}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No movies match your criteria.</p>
+{% endif %} {% endblock %}

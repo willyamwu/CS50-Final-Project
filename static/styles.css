@@ -1,51 +1,128 @@
 /* Size for brand */
 nav .navbar-brand {
-    font-size: xx-large;
+  font-size: xx-large;
 }
 
 /* Colors for brand */
 nav .navbar-brand .blue {
-    color: #537fbe;
+  color: #537fbe;
 }
 
 nav .navbar-brand .red {
-    color: #ea433b;
+  color: #ea433b;
 }
 
 nav .navbar-brand .yellow {
-    color: #f5b82e;
+  color: #f5b82e;
 }
 
 nav .navbar-brand .green {
-    color: #2e944b;
+  color: #2e944b;
 }
 
 h2 {
-    padding: 10px;
+  padding: 10px;
 }
 
 p {
-    font-family: "Inter", "Roboto";
+  font-family: "Inter", "Roboto";
 }
 
 .container {
-    display: flex;
+  display: flex;
 }
 
 table {
-    background-color: transparent;
-    margin-bottom: 1rem;
-    width: 100%;
-
+  background-color: transparent;
+  margin-bottom: 1rem;
+  width: 100%;
 }
 
 table th,
 table td {
-    font-family: "Menlo", sans-serif;
-    padding: 0.5rem;
-    vertical-align: middle;
+  font-family: "Menlo", sans-serif;
+  padding: 0.5rem;
+  vertical-align: middle;
 }
 
 input {
-    margin: 10px;
+  margin: 10px;
+}
+
+.movie-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.movie-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.movie-form select,
+.movie-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.movie-form button {
+  background-color: #ff3366;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.movie-form button:hover {
+  background-color: #cc0044;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("https://www.teahub.io/photos/full/220-2205714_get-the-latest-movies-data-src-kodi-tv.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: "Arial", sans-serif;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+#start-button {
+  padding: 10px 20px;
+  font-size: 1.5em;
+  background-color: #3498db; /* Change the color to ANYTHING */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#start-button:hover {
+  background-color: red; /* Change the color to ANYTHING */
+}
+
+#welcome-container {
+  background: rgba(0, 0, 0, 0.9); /* Black color with 0.9 opacity */
+  padding: 20px; /* Adjust as needed */
+  border-radius: 10px; /* Adjust as needed */
 }

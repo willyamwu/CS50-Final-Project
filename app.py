@@ -1,5 +1,4 @@
 import os
-
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -21,7 +20,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db")
+db = SQL("sqlite:///users.db")
 
 
 @app.after_request
@@ -36,34 +35,30 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    """Show portfolio of stocks"""
     user_id = session["user_id"]
     user = db.execute("SELECT * FROM users WHERE id = ?", user_id)
 
-    # Select all the unique symbols and sum of shares for each symbol
-    rows = db.execute(
-        "SELECT symbol, SUM(shares) AS shares FROM trades WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) > 0",
-        user_id,
-    )
-    # Set total net worth to cash value
-    total_net_worth = user[0]["cash"]
+    # # Select all the unique symbols and sum of shares for each symbol
+    # rows = db.execute(
+    #     "SELECT symbol, SUM(shares) AS shares FROM trades WHERE user_id = ? GROUP BY symbol HAVING SUM(shares) > 0",
+    #     user_id,
+    # )
+    # # Set total net worth to cash value
+    # total_net_worth = user[0]["cash"]
 
-    # Loop through the each unique symbol
-    for row in rows:
-        # Get the current price
-        row["price"] = lookup(row["symbol"])["price"]
-        # Get the value of all the holdings based on the price and shares owned
-        row["total_holdings"] = row["price"] * row["shares"]
-        # Add the total holdings for this symbol to the net worth
-        total_net_worth += row["total_holdings"]
+    # # Loop through the each unique symbol
+    # for row in rows:
+    #     # Get the current price
+    #     row["price"] = lookup(row["symbol"])["price"]
+    #     # Get the value of all the holdings based on the price and shares owned
+    #     row["total_holdings"] = row["price"] * row["shares"]
+    #     # Add the total holdings for this symbol to the net worth
+    #     total_net_worth += row["total_holdings"]
 
     # Render the page and pass through the variables
     return render_template(
         "index.html",
-        username=user[0]["username"],
-        cash=user[0]["cash"],
-        rows=rows,
-        total_net_worth=total_net_worth,
+        username=user[0]["username"]
     )
 
 
@@ -86,7 +81,8 @@ def buy():
         elif request.form.get("shares").isdigit() == False:
             return apology("shares must be positive whole number")
 
-        user_data = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        user_data = db.execute(
+            "SELECT * FROM users WHERE id = ?", session["user_id"])
         shares = int(request.form.get("shares"))
         # Gets the current stock price of the symbol
         stock_price = lookup(request.form.get("symbol"))["price"]
@@ -164,7 +160,8 @@ def login():
 
         # Query database for username
         rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
+            "SELECT * FROM users WHERE username = ?", request.form.get(
+                "username")
         )
 
         # Ensure username exists and password is correct
@@ -295,6 +292,12 @@ def register():
         return render_template("register.html")
 
 
+@app.route("/form", methods=["GET", "POST"])
+@login_required
+def form():
+    return render_template("form.html")
+
+
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
@@ -321,7 +324,8 @@ def sell():
             return apology("you are trying to sell too many shares")
 
         # Gather data on the current user
-        user_data = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        user_data = db.execute(
+            "SELECT * FROM users WHERE id = ?", session["user_id"])
         # Gather the number of shares
         shares = int(request.form.get("shares"))
 
@@ -355,3 +359,35 @@ def sell():
             session["user_id"],
         )
         return render_template("sell.html", rows=rows)
+
+
+@app.route("/changepassword", methods=["GET", "POST"])
+def change_password():
+    # Change password
+    # Ensure user is submitting a password change request
+    if request.method == "POST":
+        old_password = request.form.get("old_password")
+        new_password = request.form.get("new_password")
+        user_id = session["user_id"]
+        # Ensure the user enters their old password
+        if not old_password:
+            return apology("must enter old password")
+        # Ensure a new password was submitted
+        if not new_password:
+            return apology("must enter new password")
+        # Query for old hashed password
+        password_check = db.execute(
+            "SELECT hash FROM users WHERE id = :user_id", user_id=user_id
+        )[0]["hash"]
+        # Check to ensure that the user entered the correct existing password
+        if not check_password_hash(password_check, old_password):
+            return apology("Incorrect password")
+        # Hash the new password and upload it to the database
+        hash_password = generate_password_hash(new_password)
+        db.execute("UPDATE users SET hash = ? WHERE id = ?",
+                   hash_password, user_id)
+        return redirect("/")
+
+    # User opened the webpage (no submit) and render page
+    else:
+        return render_template("changepassword.html")

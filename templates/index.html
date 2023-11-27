@@ -1,33 +1,21 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block title %} Index {% endblock %} {% block main
+%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Your Homepage</title>
+  </head>
 
-{% block title %}
-    Index
-{% endblock %}
-
-{% block main %}
-    <h1> Welcome, {{ username }}</h1>
-    <h2>Current Net Worth: {{ total_net_worth| usd }}</h2>
-    <h2>Current Cash Balance: {{ cash | usd }}</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Symbol</th>
-                <th>Price</th>
-                <th>Shares</th>
-                <th>Total Holdings</th>
-            </tr>
-        </thead>
-        <tbody>
-        <!-- Loop through the database entries to display them in this table -->
-            {% for row in rows %}
-                <tr>
-                    <td>{{ row.symbol }}</td>
-                    <td>{{ row.price | usd }}</td>
-                    <td>{{ row.shares }}</td>
-                    <td>{{ row.total_holdings | usd }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <body>
+    <div id="welcome-container">
+      <h1>Movie Magic</h1>
+      <button id="start-button" onclick="location.href='INSERT LINK'">
+        Find a movie!
+      </button>
+    </div>
+  </body>
+</html>
 {% endblock %}
