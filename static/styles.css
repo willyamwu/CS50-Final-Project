@@ -21,11 +21,12 @@ nav .navbar-brand .green {
 }
 
 h2 {
+  font-family: "Roboto", sans-serif;
   padding: 10px;
 }
 
 p {
-  font-family: "Inter", "Roboto";
+  font-family: "Roboto", sans-serif;
 }
 
 .container {
@@ -214,6 +215,7 @@ label {
   display: block;
   margin-bottom: 10px;
   text-align: left;
+  font-family: "Roboto", sans-serif;
 }
 
 input[type="checkbox"],
