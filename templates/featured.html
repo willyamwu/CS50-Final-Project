@@ -1,14 +1,14 @@
 {% extends "layout.html" %} {% block title %} Featured Movies {% endblock %} {%
 block main %}
-<div class="container mt-5">
-  <h2 class="mb-4 text-center">Featured Movies</h2>
+<div class="container mt-5 text-center">
+  <h2 class="mb-4">Featured Movies</h2>
   <div class="row">
     {% for movie in featured_movies %}
     <div class="col-lg-4 col-md-6 mb-4">
-      <div class="card">
+      <div class="card mb-3">
         <img
           src="{{ movie.image_url }}"
-          class="card-img-top"
+          class="card-img-top img-fluid"
           alt="{{ movie.title }}"
         />
         <div class="card-body">
@@ -17,7 +17,7 @@ block main %}
             <strong>Genre:</strong> {{ movie.genre }},
             <strong>Length:</strong> {{ movie.length }} min
           </p>
-          <a href="/movie/{{ movie.id }}" class="btn btn-primary"
+          <a href="/movie/{{ movie.id }}" class="btn btn-primary btn-block"
             >View Details</a
           >
         </div>

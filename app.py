@@ -21,6 +21,7 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///users.db")
+moviesDB = SQL("sqlite:///imdb-data.db")
 
 
 @app.after_request
@@ -35,6 +36,7 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
+    print("hi")
     user_id = session["user_id"]
     user = db.execute("SELECT * FROM users WHERE id = ?", user_id)
 
@@ -182,7 +184,17 @@ def form():
 @app.route("/recommendation", methods=["GET", "POST"])
 @login_required
 def recommendation():
-    return render_template("recommendation.html")
+    if request.method == "POST":
+        movies = moviesDB.execute(
+            "SELECT * FROM basics WHERE titleType = 'movie' LIMIT 10")
+
+        return render_template("recommendation.html", movies=movies)
+
+    else:
+        movies = moviesDB.execute(
+            "SELECT * FROM basics WHERE titleType = 'movie' LIMIT 10")
+
+        return render_template("recommendation.html", movies=movies)
 
 
 @app.route("/featured", methods=["GET", "POST"])
