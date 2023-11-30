@@ -21,7 +21,8 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///users.db")
-moviesDB = SQL("sqlite:///final_project_imdb.db")
+moviesDB = SQL("sqlite:///imdb-data.db")
+# moviesDB = SQL("sqlite:///final_project_imdb.db")
 
 
 @app.after_request
@@ -177,24 +178,11 @@ def register():
 def form():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        return render_template("recommendation.html")
+        movies = moviesDB.execute(
+            "SELECT * FROM basics WHERE runtimeMinutes < 10 LIMIT 10")
+
+        return render_template("recommendation.html", movies=movies)
     return render_template("form.html")
-
-
-@app.route("/recommendation", methods=["GET", "POST"])
-@login_required
-def recommendation():
-    if request.method == "POST":
-        movies = moviesDB.execute(
-            "SELECT * FROM basics WHERE titleType = 'movie' LIMIT 10")
-
-        return render_template("recommendation.html", movies=movies)
-
-    else:
-        movies = moviesDB.execute(
-            "SELECT * FROM basics WHERE titleType = 'movie' LIMIT 10")
-
-        return render_template("recommendation.html", movies=movies)
 
 
 @app.route("/featured", methods=["GET", "POST"])
