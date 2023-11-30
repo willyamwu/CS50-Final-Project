@@ -21,7 +21,7 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///users.db")
-moviesDB = SQL("sqlite:///imdb-data.db")
+moviesDB = SQL("sqlite:///final_project_imdb.db")
 
 
 @app.after_request
