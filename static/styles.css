@@ -86,6 +86,7 @@ table td {
 body {
   margin: 0;
   padding: 0;
+  padding-top: 70px;
   background-image: url("https://www.teahub.io/photos/full/220-2205714_get-the-latest-movies-data-src-kodi-tv.jpg");
   background-size: cover;
   background-position: center;
@@ -93,9 +94,9 @@ body {
   color: white;
   text-align: center;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
   height: 100vh;
 }
 
@@ -242,6 +243,9 @@ input[type="number"] {
 .movie-card {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  /* margin-top: 100px; */
+  margin-bottom: 10px;
   padding: 20px;
+  border-radius: 5px;
 }
+/* red alert calls: position, margin, padding,  */

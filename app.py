@@ -1,7 +1,7 @@
 import os
 import cs50
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, lookup, usd
@@ -9,6 +9,7 @@ from datetime import datetime
 import requests
 
 trending_url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1"
+image_url = "https://api.themoviedb.org/3/movie/movie_id/images"
 
 headers = {
     "accept": "application/json",
@@ -185,38 +186,102 @@ def register():
 @login_required
 def form():
     # Create an SQL object
-    db = SQL("sqlite:///final_project_imdb.db")
+    # db = SQL("sqlite:///final_project_imdb.db")
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         preferred_length = int(request.form.get('sliderValue'))
+        print(preferred_length)
         genres = request.form.getlist('genre')
-        rating = int(request.form.get('rating'))
+        print(genres)
 
-        # Create a tuple of placeholders for the genres
-        genre_placeholders = ', '.join(['?' for _ in genres])
+        # Check if 'rating' is a valid non-empty string
+        rating_str = request.form.get('rating')
+        if rating_str and rating_str.isdigit():
+            rating = int(rating_str)
 
-        # Use the tuple of placeholders in the query
-        query = (
-            "SELECT series_title, rating, posterlink "
-            "FROM imdb_1000GOOD "
-            "WHERE rating >= ? "
-            "AND runtime <= ? "
-            f"AND genre IN ({genre_placeholders}) "
-            "ORDER BY rating DESC "
-            "LIMIT 5"
-        )
+            # Create a tuple of placeholders for the genres
+            genre_placeholders = ', '.join(['?' for _ in genres])
 
-        # Execute the query with parameters
-        movies = db.execute(query, rating, preferred_length, *genres)
+            print(genre_placeholders)
 
-        # Check if the query is successful
-        if movies:
-            return render_template("recommendation.html", movies=movies)
-        else:
-            return render_template("form.html", message="No movies found.")
+            query = "SELECT series_title, rating, posterlink FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ("
 
+            for genre in genres:
+                query += f"genre LIKE %{genre}% OR "
+
+            query = query[:-4]
+            query += ") COLLATE NOCASE ORDER BY rating DESC LIMIT 5"
+
+            print(query)
+
+            # # Use the tuple of placeholders in the query
+            # query = (
+            #     "SELECT series_title, rating, posterlink "
+            #     "FROM imdb_1000GOOD "
+            #     "WHERE rating >= ? "
+            #     "AND runtime <= ? "
+            #     f"AND genre LIKE {genre_placeholders} COLLATE NOCASE "
+            #     "ORDER BY rating DESC "
+            #     "LIMIT 5"
+            # )
+
+            # query = (
+            #     "SELECT series_title, rating, posterlink "
+            #     "FROM imdb_1000GOOD "
+            #     "WHERE rating >= ? "
+            #     "AND runtime <= ? "
+            #     f"AND ({' OR '.join(['genre LIKE ?' for _ in genres])}) COLLATE NOCASE "
+            #     "ORDER BY rating DESC "
+            #     "LIMIT 5"
+            # )
+
+            query = "SELECT series_title, rating, posterlink FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ("
+
+            for genre in genres:
+                query += f"genre LIKE ? OR "
+
+            query = query[:-4]  # Remove the last ' OR '
+            query += ") ORDER BY rating DESC LIMIT 5"
+
+            print(query)
+
+            try:
+                # Assuming you have placeholders for rating and runtime
+                parameters = (rating, preferred_length, *
+                              [f'%{genre}%' for genre in genres])
+
+                # Execute the query with parameters
+                movies = moviesDB.execute(query, rating, preferred_length, *
+                                          [f'%{genre}%' for genre in genres])
+
+                # # Convert the SQL query result to a list of dictionaries
+                # movies = [dict(movie) for movie in movies]
+
+                print("hi")
+
+                # Store the movies data in the session
+                # session["movies"] = movies
+
+                # Redirect to the recommendation page
+                # return redirect(url_for("recommendation"))
+                return render_template("recommendation.html", movies=movies)
+
+            except Exception as e:
+                return render_template("form.html", message=f"Error: {e}")
+
+    # If it's a GET request or form submission failed, return the form template
     return render_template("form.html")
+
+
+@app.route("/recommendation")
+@login_required
+def recommendation():
+    # Get the movies data from the session
+    movies = session.get("movies")
+
+    # Render the recommendation.html template with the movies
+    return render_template("recommendation.html", movies=movies)
 
 
 @app.route("/trending")
