@@ -123,6 +123,7 @@ h1 {
   background: rgba(0, 0, 0, 0.9); /* Black color with 0.9 opacity */
   padding: 20px; /* Adjust as needed */
   border-radius: 10px; /* Adjust as needed */
+  margin: 5px;
 }
 
 .navbar {
@@ -133,9 +134,9 @@ h1 {
 
 .background-box {
   background: rgba(0, 0, 0, 0.9); /* Black color with 0.9 opacity */
+  margin: 15px;
   padding: 20px; /* Adjust as needed */
-  margin: 10px;
-  border-radius: 10px; /* Adjust as needed */
+  border-radius: 5px; /* Adjust as needed */
 }
 
 .movie-form-checkbox-text {
@@ -247,5 +248,9 @@ input[type="number"] {
   margin-bottom: 10px;
   padding: 20px;
   border-radius: 5px;
-}
 /* red alert calls: position, margin, padding,  */
+}
+
+.card-text {
+  color: black;
+}

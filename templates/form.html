@@ -2,6 +2,7 @@
 {% block main %}
 <div class="background-box">
   <h1>Movie Preferences</h1>
+  <p>Select certain filters to </p>
 
   <form action="/form" method="post">
     <div class="horizontal-row">
@@ -34,39 +35,17 @@
             class="checkbox"
             type="checkbox"
             name="genre"
-            value="biography"
+            value="Biography"
           />
           Biography
-        </label>
-        <label>
-          <input class="checkbox" type="checkbox" name="genre" value="Crime" />
-          Crime
         </label>
         <label>
           <input class="checkbox" type="checkbox" name="genre" value="Comedy" />
           Comedy
         </label>
         <label>
-          <input
-            class="checkbox"
-            type="checkbox"
-            name="genre"
-            value="film-noir"
-          />
-          Film-Noir
-        </label>
-        <label>
-          <input class="checkbox" type="checkbox" name="genre" value="Music" />
-          Music
-        </label>
-        <label>
-          <input
-            class="checkbox"
-            type="checkbox"
-            name="genre"
-            value="musical"
-          />
-          Musical
+          <input class="checkbox" type="checkbox" name="genre" value="Crime" />
+          Crime
         </label>
         <label>
           <input class="checkbox" type="checkbox" name="genre" value="Drama" />
@@ -77,27 +56,57 @@
             class="checkbox"
             type="checkbox"
             name="genre"
-            value="history"
+            value="Fantasy"
+          />
+          Fantasy
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="Film-Noir"
+          />
+          Film-Noir
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="History"
           />
           History
         </label>
         <label>
-          <input
-            class="checkbox"
-            type="checkbox"
-            name="genre"
-            value="romance"
-          />
-          Romance
+          <input class="checkbox" type="checkbox" name="genre" value="Horror" />
+          Horror
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="Music" />
+          Music
         </label>
         <label>
           <input
             class="checkbox"
             type="checkbox"
             name="genre"
-            value="western"
+            value="Musical"
           />
-          Western
+          Musical
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="Romance"
+          />
+          Romance
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="Sci-Fi" />
+          Sci-Fi
         </label>
         <label>
           <input class="checkbox" type="checkbox" name="genre" value="Sport" />
@@ -108,7 +117,7 @@
             class="checkbox"
             type="checkbox"
             name="genre"
-            value="thriller"
+            value="Thriller"
           />
           Thriller
         </label>
@@ -121,31 +130,24 @@
             class="checkbox"
             type="checkbox"
             name="genre"
-            value="fantasy"
+            value="Western"
           />
-          Fantasy
-        </label>
-        <label>
-          <input class="checkbox" type="checkbox" name="genre" value="Sci-Fi" />
-          Sci-Fi
-        </label>
-        <label>
-          <input class="checkbox" type="checkbox" name="genre" value="Horror" />
-          Horror
+          Western
         </label>
       </div>
     </div>
 
     <div class="horizontal-row">
+      <h2>Maximum Movie Length</h2>
       <label>
-        Preferred Length (minutes):
+        Length (minutes):
         <input
           type="range"
           id="valueSlider"
           name="sliderValue"
           min="30"
           max="300"
-          step="1"
+          step="30"
           value="150"
           oninput="updateSliderValue(this.value)"
         />
@@ -154,6 +156,7 @@
     </div>
 
     <div class="horizontal-row">
+      <h2>Lowest Allowed Average Audience Rating</h2>
       <label>
         Rating (1-10):
         <input type="number" name="rating" min="1" max="10" step="1" />

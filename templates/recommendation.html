@@ -1,19 +1,25 @@
-<!-- templates/recommendation.html -->
+<!-- templates/recommendation.html-->
 {% extends "layout.html" %} {% block title %} Index {% endblock %} {% block main
 %}
-<!-- Your content goes here -->
-<h1>Movie Recommendations</h1>
+<div class="background-box">
+<h1>Your Personalized Movie Recommendations</h1>
 
 {% if movies %}
-<!-- Display movie titles -->
-<!-- <ul> -->
-{% for movie in movies %}
-<div class="movie-card">
-  <h2 style="color: black">{{ movie.series_title }}</h2>
-  <!-- <p>{{ movie|tojson|safe }}</p> -->
-</div>
-{% endfor %}
-<!-- </ul> -->
+
+
+  {% for movie in movies %}
+  <div class="movie-card">
+    <img src="{{ movie.posterlink }}" alt="{{ movie.series_title }} Poster" style="max-width: 100%; max-height: 600px">
+    <h2 style="color: black">{{ movie.series_title }}</h2>
+    <p class="card-text">Release Year: {{ movie.release_year }}</p>
+    <p class="card-text">{{ movie.genre }}</p>
+    <p class="card-text">{{ movie.overview }}</p>
+  </div>
+  {% endfor %}
+
+
 {% else %}
 <p>No movie recommendations available.</p>
-{% endif %} {% endblock %}
+{% endif %} 
+</div>
+{% endblock %}

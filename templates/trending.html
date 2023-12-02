@@ -1,24 +1,40 @@
 {% extends "layout.html" %} {% block title %} Trending Movies {% endblock %} {%
 block main %}
 
-<h2>Trending Movies</h2>
-<br /><br /><br /><br /><br /><br />
-{% for movie in movies %}
-<div class="movie-card m-5">
-  <img
-    src="https://image.tmdb.org/t/p/original/{{ movie.poster_path }}"
-    alt="{{ movie.original_title }} Poster"
-    style="max-width: 100%; max-height: 300px"
-  />
-  <img
-    src="https://image.tmdb.org/t/p/original/{{ movie.backdrop_path }}"
-    alt="{{ movie.original_title }} Poster"
-    style="max-width: 100%; max-height: 300px"
-  />
-  <h2 style="color: black">{{ movie.title }}</h2>
-  <p style="color: black">Release Date: {{ movie.release_date }}</p>
-  <!-- <p style="color: black">{{ movie.vote_average }}</p>
-    <p style="color: black">{{ movie.vote_count }}</p> -->
-  <p style="color: black">{{ movie.overview }}</p>
+<div class="background-box">
+  <h2>Trending Movies</h2>
+  <p>These are the top trending movies in the U.S.</p>
+  {% for movie in movies %}
+  <div class="movie-card m-5">
+    <img
+      src="https://image.tmdb.org/t/p/original/{{ movie.poster_path }}"
+      alt="{{ movie.original_title }} Poster"
+      style="max-width: 100%; max-height: 300px"
+    />
+    <h2 style="color: black">{{ movie.title }}</h2>
+    <p style="color: black">Release Date: {{ movie.release_date }}</p>
+    <p style="color: black">{{ movie.overview }}</p>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %} {% endblock %}
+
+<!-- <div class="background-box">
+  <h2>Trending Movies</h2>
+  <div class="movie-container">
+    {% for movie in movies %}
+    <div class="movie-card">
+      <img
+        src="https://image.tmdb.org/t/p/original/{{ movie.poster_path }}"
+        alt="{{ movie.original_title }} Poster"
+        style="max-width: 100%; max-height: 300px"
+      />
+      <h2 style="color: black">{{ movie.title }}</h2>
+      <p style="color: black">Release Date: {{ movie.release_date }}</p>
+      <p style="color: black">{{ movie.overview }}</p>
+    </div>
+    {% if loop.index % 3 == 0 %}
+  </div>
+  <div class="movie-container">{% endif %} {% endfor %}</div>
+</div> -->
+
+{% endblock %}

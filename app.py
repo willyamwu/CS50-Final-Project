@@ -185,8 +185,6 @@ def register():
 @app.route("/form", methods=["GET", "POST"])
 @login_required
 def form():
-    # Create an SQL object
-    # db = SQL("sqlite:///final_project_imdb.db")
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
@@ -203,68 +201,22 @@ def form():
             # Create a tuple of placeholders for the genres
             genre_placeholders = ', '.join(['?' for _ in genres])
 
-            print(genre_placeholders)
-
-            query = "SELECT series_title, rating, posterlink FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ("
+            query = "SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ("
 
             for genre in genres:
-                query += f"genre LIKE %{genre}% OR "
+                query += f"genre LIKE ? AND "
 
-            query = query[:-4]
-            query += ") COLLATE NOCASE ORDER BY rating DESC LIMIT 5"
+            query = query[:-5]  # Remove the last ' OR '
+            query += ") ORDER BY rating DESC LIMIT 10"
 
-            print(query)
-
-            # # Use the tuple of placeholders in the query
-            # query = (
-            #     "SELECT series_title, rating, posterlink "
-            #     "FROM imdb_1000GOOD "
-            #     "WHERE rating >= ? "
-            #     "AND runtime <= ? "
-            #     f"AND genre LIKE {genre_placeholders} COLLATE NOCASE "
-            #     "ORDER BY rating DESC "
-            #     "LIMIT 5"
-            # )
-
-            # query = (
-            #     "SELECT series_title, rating, posterlink "
-            #     "FROM imdb_1000GOOD "
-            #     "WHERE rating >= ? "
-            #     "AND runtime <= ? "
-            #     f"AND ({' OR '.join(['genre LIKE ?' for _ in genres])}) COLLATE NOCASE "
-            #     "ORDER BY rating DESC "
-            #     "LIMIT 5"
-            # )
-
-            query = "SELECT series_title, rating, posterlink FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ("
-
-            for genre in genres:
-                query += f"genre LIKE ? OR "
-
-            query = query[:-4]  # Remove the last ' OR '
-            query += ") ORDER BY rating DESC LIMIT 5"
-
-            print(query)
 
             try:
-                # Assuming you have placeholders for rating and runtime
-                parameters = (rating, preferred_length, *
-                              [f'%{genre}%' for genre in genres])
-
                 # Execute the query with parameters
                 movies = moviesDB.execute(query, rating, preferred_length, *
                                           [f'%{genre}%' for genre in genres])
 
-                # # Convert the SQL query result to a list of dictionaries
-                # movies = [dict(movie) for movie in movies]
-
                 print("hi")
 
-                # Store the movies data in the session
-                # session["movies"] = movies
-
-                # Redirect to the recommendation page
-                # return redirect(url_for("recommendation"))
                 return render_template("recommendation.html", movies=movies)
 
             except Exception as e:
@@ -277,11 +229,8 @@ def form():
 @app.route("/recommendation")
 @login_required
 def recommendation():
-    # Get the movies data from the session
-    movies = session.get("movies")
-
     # Render the recommendation.html template with the movies
-    return render_template("recommendation.html", movies=movies)
+    return redirect("/")
 
 
 @app.route("/trending")
