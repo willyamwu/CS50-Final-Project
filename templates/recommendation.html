@@ -1,6 +1,19 @@
 {% extends "layout.html" %} {% block title %} Movie Recommendations {% endblock
 %} {% block main %}
 <div class="background-box">
+  <h1>Movie Recommendations</h1>
+
+  <ul>
+    {% for movie in movies %}
+    <li>{{ movie.series_title }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+<!-- {% extends "layout.html" %} {% block title %} Movie Recommendations {% endblock
+%} {% block main %}
+<div class="background-box">
   <h2 class="mb-4 text-center">Your Movie Recommendations</h2>
   <table>
     <thead>
@@ -12,8 +25,8 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Loop through the database entries to display them in this table -->
-      {% for movie in movies %}
+      Loop through the database entries to display them in this table -->
+<!-- {% for movie in movies %}
       <tr>
         <td>{{ movie.primaryTitle }}</td>
         <td>{{ movie.genres }}</td>
@@ -22,9 +35,9 @@
       </tr>
       {% endfor %}
     </tbody>
-  </table>
+  </table> -->
 
-  <!-- <div class="recommendation-list">
+<!-- <div class="recommendation-list">
     {% if movies %}
     <ul class="list-group">
       {% for movie in movies %}
@@ -44,5 +57,5 @@
     <p class="text-center">Unfortunately, no movies match your criteria.</p>
     {% endif %}
   </div> -->
-</div>
-{% endblock %}
+<!-- </div>
+{% endblock %}  -->

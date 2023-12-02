@@ -1,12 +1,20 @@
 import os
+import cs50
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from helpers import apology, login_required, lookup, usd
-
 from datetime import datetime
+import requests
+
+trending_url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1"
+
+headers = {
+    "accept": "application/json",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NDMxMWM2MTVjODlmMjViMTVlZDZlYjc1ZmRlMmFmYSIsInN1YiI6IjY1NjY0ZmRhODlkOTdmMDEzOGZmMDNhZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qykkvQ8NKn0_RYyymcgtaiib3s9hnjvadRlSt1xftGk"
+}
+
 
 # Configure application
 app = Flask(__name__)
@@ -21,8 +29,8 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///users.db")
-moviesDB = SQL("sqlite:///imdb-data.db")
-# moviesDB = SQL("sqlite:///final_project_imdb.db")
+# moviesDB = SQL("sqlite:///imdb-data.db")
+moviesDB = SQL("sqlite:///final_project_imdb.db")
 
 
 @app.after_request
@@ -176,19 +184,61 @@ def register():
 @app.route("/form", methods=["GET", "POST"])
 @login_required
 def form():
+    # Create an SQL object
+    db = SQL("sqlite:///final_project_imdb.db")
+
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        movies = moviesDB.execute(
-            "SELECT * FROM basics WHERE runtimeMinutes < 10 LIMIT 10")
+        preferred_length = int(request.form.get('sliderValue'))
+        genres = request.form.getlist('genre')
+        rating = int(request.form.get('rating'))
 
-        return render_template("recommendation.html", movies=movies)
+        # Create a tuple of placeholders for the genres
+        genre_placeholders = ', '.join(['?' for _ in genres])
+
+        # Use the tuple of placeholders in the query
+        query = (
+            "SELECT series_title, rating, posterlink "
+            "FROM imdb_1000GOOD "
+            "WHERE rating >= ? "
+            "AND runtime <= ? "
+            f"AND genre IN ({genre_placeholders}) "
+            "ORDER BY rating DESC "
+            "LIMIT 5"
+        )
+
+        # Execute the query with parameters
+        movies = db.execute(query, rating, preferred_length, *genres)
+
+        # Check if the query is successful
+        if movies:
+            return render_template("recommendation.html", movies=movies)
+        else:
+            return render_template("form.html", message="No movies found.")
+
     return render_template("form.html")
 
 
-@app.route("/featured", methods=["GET", "POST"])
+@app.route("/trending")
 @login_required
-def featured():
-    return render_template("featured.html")
+def trending():
+    params = {"language": "en-US", "page": 1}
+
+    try:
+        response = requests.get(trending_url, headers=headers, params=params)
+        response.raise_for_status()  # Check for errors in the HTTP response
+        data = response.json()
+        en_movies = [movie for movie in data.get(
+            "results", []) if movie.get("original_language") == "en"][:10]
+
+        print(en_movies)
+
+        return render_template("trending.html", movies=en_movies)
+
+        # return data["results"]  # Extract the list of popular movies
+    except requests.exceptions.RequestException as e:
+        print(f"Error making API request: {e}")
+        return None
 
 
 @app.route("/changepassword", methods=["GET", "POST"])

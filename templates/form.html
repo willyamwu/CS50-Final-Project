@@ -4,41 +4,203 @@
   <h1>Movie Preferences</h1>
 
   <form action="/form" method="post">
-    <h2>Genre</h2>
-    <label>
-      <input class="checkbox" type="checkbox" name="genre" value="action" />
-      Action
-    </label>
-    <label>
-      <input class="checkbox" type="checkbox" name="genre" value="comedy" />
-      Comedy
-    </label>
-    <label>
-      <input class="checkbox" type="checkbox" name="genre" value="drama" />
-      Drama
-    </label>
-    <label>
-      <input class="checkbox" type="checkbox" name="genre" value="sci-fi" />
-      Sci-Fi
-    </label>
-    <label>
-      <input class="checkbox" type="checkbox" name="genre" value="horror" />
-      Horror
-    </label>
+    <div class="horizontal-row">
+      <h2>Genre</h2>
+      <div class="checkbox-container">
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="action" />
+          Action
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="adventure"
+          />
+          Adventure
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="animation"
+          />
+          Animation
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="biography"
+          />
+          Biography
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="crime" />
+          Crime
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="comedy" />
+          Comedy
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="film-noir"
+          />
+          Film-Noir
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="music" />
+          Music
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="musical"
+          />
+          Musical
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="drama" />
+          Drama
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="history"
+          />
+          History
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="romance"
+          />
+          Romance
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="western"
+          />
+          Western
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="sport" />
+          Sport
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="thriller"
+          />
+          Thriller
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="war" />
+          War
+        </label>
+        <label>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="genre"
+            value="fantasy"
+          />
+          Fantasy
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="sci-fi" />
+          Sci-Fi
+        </label>
+        <label>
+          <input class="checkbox" type="checkbox" name="genre" value="horror" />
+          Horror
+        </label>
+      </div>
+    </div>
 
-    <label>
-      Preferred Length (minutes):
-      <input type="range" id="valueSlider" min="1" max="5" step="1" value="3" />
-      <output id="sliderValue">3</output>
-    </label>
+    <div class="horizontal-row">
+      <label>
+        Preferred Length (minutes):
+        <input
+          type="range"
+          id="valueSlider"
+          name="sliderValue"
+          min="30"
+          max="300"
+          step="1"
+          value="150"
+          oninput="updateSliderValue(this.value)"
+        />
+        <output id="sliderValue">150</output>
+      </label>
+    </div>
 
-    <label>
-      Rating (1-10):
-      <input type="number" name="rating" min="1" max="10" step="1" />
-    </label>
+    <div class="horizontal-row">
+      <label>
+        Rating (1-10):
+        <input type="number" name="rating" min="1" max="10" step="1" />
+      </label>
+    </div>
 
     <button class="btn btn-light" type="submit">Submit</button>
   </form>
 </div>
+
+<style>
+  /* Apply a box-sizing reset for better layout control */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Create a container to hold the checkboxes */
+  .checkbox-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns with equal width */
+    gap: 10px; /* Add some spacing between checkboxes */
+  }
+
+  /* Style for individual checkboxes */
+  .checkbox-container input[type="checkbox"] {
+    /* Add your desired checkbox styles here */
+    /* For example: */
+    margin: 0;
+    padding: 5px;
+  }
+
+  /* Style for horizontal rows */
+  .horizontal-row {
+    margin-bottom: 10px;
+  }
+</style>
+
+<!-- Script to update the slider with the proper time value -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var slider = document.getElementById("valueSlider");
+    var output = document.getElementById("sliderValue");
+
+    slider.oninput = function () {
+      output.innerHTML = slider.value;
+    };
+  });
+</script>
 
 {% endblock %}

@@ -126,11 +126,14 @@ h1 {
 
 .navbar {
   margin-top: 0;
+  margin-bottom: 5px;
+  overflow: visible;
 }
 
 .background-box {
   background: rgba(0, 0, 0, 0.9); /* Black color with 0.9 opacity */
   padding: 20px; /* Adjust as needed */
+  margin: 10px;
   border-radius: 10px; /* Adjust as needed */
 }
 
@@ -234,4 +237,11 @@ input[type="number"] {
 
 .checkbox:hover {
   background-color: #2980b9;
+}
+
+.movie-card {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 20px;
 }
