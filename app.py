@@ -254,6 +254,24 @@ def trending():
         print(f"Error making API request: {e}")
         return None
 
+@app.route("/ratemovie", methods=["POST"])
+@login_required
+def rate_movie():
+    if request.method == "POST":
+        user_id = session["user_id"]
+        movie_id = request.form.get("movie_id")
+        user_rating = request.form.get("rating")
+
+        # Update the database with the user's rating
+        db.execute("INSERT INTO movie_ratings (user_id, movie_id, rating) VALUES (?, ?, ?)",
+                   user_id, movie_id, user_rating)
+
+        # Redirect user back to the recommendations page
+        return redirect("/recommendation")
+    
+    else:
+        return render_template("ratemovie.html")
+
 
 @app.route("/changepassword", methods=["GET", "POST"])
 def change_password():
