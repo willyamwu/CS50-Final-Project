@@ -134,7 +134,9 @@ h1 {
 
 .background-box {
   background: rgba(0, 0, 0, 0.9); /* Black color with 0.9 opacity */
-  margin: 15px;
+  margin-left: 75px;
+  margin-right: 75px;
+  margin-bottom: 15px;
   padding: 20px; /* Adjust as needed */
   border-radius: 5px; /* Adjust as needed */
 }

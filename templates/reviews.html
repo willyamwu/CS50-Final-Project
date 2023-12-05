@@ -5,8 +5,12 @@ block main%}
   <h1>Movie Ratings</h1>
   <p>Latest movie reviews</p>
   <div class="card-box">
-    {% for review in reviews %}
+    {% for review, poster_link in reviews %}
     <div class="movie-card rec-movie-card">
+      <img src="{{ poster_link }}" alt="Movie Poster" style="max-width: 100px; max-height: 150px;">
+      <!-- {% if review.poster_link %}
+        <img src="{{ review.poster_link }}" alt="Movie Poster" style="max-width: 100px; max-height: 150px;">
+      {% endif %} -->
       <h2 style="color: black">{{ review.movie_title }}</h2>
       <p class="card-text">Rating: {{ review.user_rating }}</p>
       <p class="card-text">{{ review.comments }}</p>

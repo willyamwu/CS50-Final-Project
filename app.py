@@ -187,7 +187,8 @@ def form():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        preferred_length = int(request.form.get('sliderValue'))
+        preferred_length = int(request.form.get('valueSlider'))
+        # preferred_decade = int(request.form.get('sliderLength'))
         genres = request.form.getlist('genre')
 
         # Check if 'rating' is a valid non-empty string
@@ -286,11 +287,25 @@ def write_review():
         movie_title = request.form.get('movieTitle')
         user_rating = int(request.form.get('rating'))
         comments = request.form.get('comments')
+        # Fetch the poster link for the given movie title
+        # result = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ?", (movie_title,))
+        # Extract the poster link from the row
+        # poster_link = result.fetchone()['posterlink'] if result else None
 
         moviesDB.execute("INSERT INTO MovieReviews (movie_title, user_rating, comments) VALUES (?, ?, ?)", movie_title, user_rating, comments)
         reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
 
-        return render_template("reviews.html", reviews=reviews)
+        poster_links = []
+        for review in reviews:    
+            poster_link_value = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ? LIMIT 1", review["movie_title"])
+
+            try: 
+                poster_link = poster_link_value[0]["posterlink"]
+                poster_links.append(poster_link)
+            except:
+                poster_links.append("Default")
+
+        return render_template("reviews.html", reviews=zip(reviews, poster_links))
     else:
         return render_template("writereview.html")
 
@@ -298,4 +313,25 @@ def write_review():
 @login_required
 def reviews():
     reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
-    return render_template("reviews.html", reviews=reviews)
+    
+    poster_links = []
+    for review in reviews:    
+        poster_link_value = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ? LIMIT 1", review["movie_title"])
+
+        try: 
+            poster_link = poster_link_value[0]["posterlink"]
+            poster_links.append(poster_link)
+        except:
+            poster_links.append("Default")
+
+        # poster_link_cursor = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ? LIMIT 1", (review["movie_title"],))
+        # poster_link_value = poster_link_cursor.fetchone()
+        
+        # # Append the value to poster_links (or use a default value if no match is found)
+        # poster_links.append(poster_link_value[0] if poster_link_value else "Default Poster Link")
+    
+    print(poster_links)
+    
+    # return render_template("reviews.html", reviews=reviews)
+    return render_template("reviews.html", reviews=zip(reviews, poster_links))
+

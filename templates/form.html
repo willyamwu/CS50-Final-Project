@@ -192,7 +192,7 @@
         <input
           type="range"
           id="valueSlider"
-          name="sliderValue"
+          name="valueSlider"
           min="30"
           max="300"
           step="30"
@@ -202,6 +202,24 @@
         <output id="sliderValue">150</output>
       </label>
     </div>
+
+    <!-- <div class="horizontal-row">
+      <h2>Decade Movie Was Released</h2>
+      <label>
+        Released (year):
+        <input
+          type="range"
+          id="lengthSlider"
+          name="lengthSlider"
+          min="1920"
+          max="2020"
+          step="10"
+          value="1970"
+          oninput="updateSliderValue(this.value)"
+        />
+        <output id="sliderLength">2020</output>
+      </label>
+    </div> -->
 
     <div class="horizontal-row">
       <h2>Lowest Allowed Average Audience Rating</h2>
@@ -239,6 +257,9 @@
   /* Style for horizontal rows */
   .horizontal-row {
     margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
   }
 </style>
 
