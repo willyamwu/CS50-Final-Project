@@ -1,11 +1,16 @@
-{% extends "layout.html" %} {% block title %} Index {% endblock %} {% block main
+{% extends "layout.html" %} {% block title %} {% endblock %} {% block main
 %}
 
 <div id="welcome-container">
   <h1>Movie Magic</h1>
-  <p>Don't know what to watch? Click the button.</p>
+  <p>Don't know what to watch?</p>
   <button id="start-button" onclick="location.href='/form'">
     Find a movie!
+  </button>
+  <br></br>
+  <p>Want to speak your mind?</p>
+  <button id="start-button" onclick="location.href='/writereview'">
+    Review a movie!
   </button>
 </div>
 {% endblock %}

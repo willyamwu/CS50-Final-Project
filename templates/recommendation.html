@@ -12,24 +12,10 @@
     <img src="{{ movie.posterlink }}" alt="{{ movie.series_title }} Poster" style="max-width: 100%; max-height: 600px">
     <h2 style="color: black">{{ movie.series_title }}</h2>
     <p class="card-text">Release Year: {{ movie.release_year }}</p>
-    <p class="card-text">{{ movie.genre }}</p>
+    <p class="card-text">Director: {{ movie.director }}</p>
+    <p class="card-text">Runtime: {{ movie.runtime }} minutes</p>
+    <p class="card-text">Genres: {{ movie.genre }}</p>
     <p class="card-text">{{ movie.overview }}</p>
-
-    <br></br>
-
-    <form action="/reviews" method="post">
-      <h2 class="card-text">Rate this movie</h2>
-      <p for="rating" class="card-text">Rate this movie:</p>
-      <select name="rating" id="rating">
-          <option value="1">1 (disliked)</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5 (loved)</option>
-      </select>
-      <input type="hidden" name="movie_id" value="{{ movie.id }}">
-      <input type="submit" value="Submit Rating">
-    </form>
 
   </div>
 
