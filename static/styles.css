@@ -254,3 +254,17 @@ input[type="number"] {
 .card-text {
   color: black;
 }
+
+.card-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* This ensures that the items are spaced nicely */
+    /* Add any other styling you need for this container */
+}
+
+.rec-movie-card {
+    box-sizing: border-box; /* Include padding and borders in the element's total width and height */
+    width: calc(25% - 10px); /* Subtract some pixels for margin */
+    margin: 5px; /* Half of the subtracted amount to have equal spacing on both sides */
+    /* Add any other styling you need for the cards */
+}

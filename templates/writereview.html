@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block main %}
+<div class="container mb-5">
+<div class="card text-center">
+    <div class="card-header text-black">
+      <h2 class="mb-0">Movie Review Form</h2>
+    </div>
+    <div class="card-body text-dark">
+      <form action="#" method="post" id="movieReviewForm">
+       <div class="form-group row justify-content-center">
+          <label for="movieTitle" class="col-form-label text-center">Movie Title:</label>
+          <textarea class="form-control text-center" id="movieTitle" name="movieTitle" rows="1" required></textarea>
+       </div>
+       <br></br>
+      
+       <div class="form-group row justify-content-center text-center">
+          <label for="rating" class="col-form-label text-center">Rating (out of 5):</label>
+          <div>
+            <select class="form-control mx-auto" id="rating" name="rating" required>
+             <option value="1">1 (disliked)</option>
+             <option value="2">2</option>
+             <option value="3">3</option>
+             <option value="4">4</option>
+             <option value="5">5 (loved)</option>
+            </select>
+          </div>
+       </div>
+       <br></br>
+      
+       <div class="form-group text-center">
+          <label for="comments" class="text-center">Comments:</label>
+          <textarea class="form-control text-left" id="comments" name="comments" rows="4" required></textarea>
+       </div>
+       <br></br>
+      
+       <div class="form-group">
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+       </div>
+       <br></br>
+      </form>
+    </div>
+</div>
+</div>
+{% endblock %}

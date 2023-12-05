@@ -46,7 +46,6 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    print("hi")
     user_id = session["user_id"]
     user = db.execute("SELECT * FROM users WHERE id = ?", user_id)
 
@@ -189,9 +188,7 @@ def form():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         preferred_length = int(request.form.get('sliderValue'))
-        print(preferred_length)
         genres = request.form.getlist('genre')
-        print(genres)
 
         # Check if 'rating' is a valid non-empty string
         rating_str = request.form.get('rating')
@@ -204,9 +201,9 @@ def form():
             query = "SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ("
 
             for genre in genres:
-                query += f"genre LIKE ? AND "
+                query += f"genre LIKE ? OR "
 
-            query = query[:-5]  # Remove the last ' OR '
+            query = query[:-4]  # Remove the last ' OR '
             query += ") ORDER BY rating DESC LIMIT 10"
 
 
@@ -214,8 +211,6 @@ def form():
                 # Execute the query with parameters
                 movies = moviesDB.execute(query, rating, preferred_length, *
                                           [f'%{genre}%' for genre in genres])
-
-                print("hi")
 
                 return render_template("recommendation.html", movies=movies)
 
@@ -226,10 +221,9 @@ def form():
     return render_template("form.html")
 
 
-@app.route("/recommendation")
+@app.route("/recommendation", methods=["POST"])
 @login_required
 def recommendation():
-    # Render the recommendation.html template with the movies
     return redirect("/")
 
 
@@ -245,33 +239,12 @@ def trending():
         en_movies = [movie for movie in data.get(
             "results", []) if movie.get("original_language") == "en"][:10]
 
-        print(en_movies)
-
         return render_template("trending.html", movies=en_movies)
 
         # return data["results"]  # Extract the list of popular movies
     except requests.exceptions.RequestException as e:
         print(f"Error making API request: {e}")
         return None
-
-@app.route("/ratemovie", methods=["POST"])
-@login_required
-def rate_movie():
-    if request.method == "POST":
-        user_id = session["user_id"]
-        movie_id = request.form.get("movie_id")
-        user_rating = request.form.get("rating")
-
-        # Update the database with the user's rating
-        db.execute("INSERT INTO movie_ratings (user_id, movie_id, rating) VALUES (?, ?, ?)",
-                   user_id, movie_id, user_rating)
-
-        # Redirect user back to the recommendations page
-        return redirect("/recommendation")
-    
-    else:
-        return render_template("ratemovie.html")
-
 
 @app.route("/changepassword", methods=["GET", "POST"])
 def change_password():
@@ -303,3 +276,26 @@ def change_password():
     # User opened the webpage (no submit) and render page
     else:
         return render_template("changepassword.html")
+
+@app.route("/writereview", methods=["GET", "POST"])
+@login_required
+def write_review():
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        movie_title = request.form.get('movieTitle')
+        user_rating = int(request.form.get('rating'))
+        comments = request.form.get('comments')
+
+        moviesDB.execute("INSERT INTO MovieReviews (movie_title, user_rating, comments) VALUES (?, ?, ?)", movie_title, user_rating, comments)
+        reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
+
+        return render_template("reviews.html", reviews=reviews)
+    else:
+        return render_template("writereview.html")
+
+@app.route("/reviews", methods=["GET", "POST"])
+@login_required
+def reviews():
+    reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
+    return render_template("reviews.html", reviews=reviews)

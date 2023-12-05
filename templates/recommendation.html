@@ -14,39 +14,24 @@
     <p class="card-text">Release Year: {{ movie.release_year }}</p>
     <p class="card-text">{{ movie.genre }}</p>
     <p class="card-text">{{ movie.overview }}</p>
+
+    <br></br>
+
+    <form action="/reviews" method="post">
+      <h2 class="card-text">Rate this movie</h2>
+      <p for="rating" class="card-text">Rate this movie:</p>
+      <select name="rating" id="rating">
+          <option value="1">1 (disliked)</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 (loved)</option>
+      </select>
+      <input type="hidden" name="movie_id" value="{{ movie.id }}">
+      <input type="submit" value="Submit Rating">
+    </form>
+
   </div>
-
-  <!-- RATING -->
-  <form action="/rate_movie" method="post">
-    <h2>Rating</h2>
-    <label for="rating">Rate this movie:</label>
-    <select name="rating" id="rating">
-        <option value="1">1 (disliked)</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5 (loved)</option>
-    </select>
-    <input type="hidden" name="movie_id" value="{{ movie.id }}">
-    <input type="submit" value="Submit Rating">
-  </form>
-
-
-  <form action="/form" method="post">
-    <div class="horizontal-row">
-      <h2>Genre</h2>
-      <div class="checkbox-container">
-        <label>
-          <input class="checkbox" type="checkbox" name="genre" value="Action" />
-          Action
-        </label>
-        <label>
-          <input
-            class="checkbox"
-            type="checkbox"
-            name="genre"
-            value="Adventure"
-          />
 
   {% endfor %}
 
