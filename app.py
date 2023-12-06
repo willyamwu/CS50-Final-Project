@@ -284,18 +284,24 @@ def write_review():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        user_id = session["user_id"]
+        user = db.execute("SELECT * FROM users WHERE id = ?", user_id)
+        username = user[0]["username"]
+
         movie_title = request.form.get('movieTitle')
         user_rating = int(request.form.get('rating'))
         comments = request.form.get('comments')
+        
         # Fetch the poster link for the given movie title
         # result = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ?", (movie_title,))
         # Extract the poster link from the row
         # poster_link = result.fetchone()['posterlink'] if result else None
 
-        moviesDB.execute("INSERT INTO MovieReviews (movie_title, user_rating, comments) VALUES (?, ?, ?)", movie_title, user_rating, comments)
+        moviesDB.execute("INSERT INTO MovieReviews (movie_title, user_rating, comments, username) VALUES (?, ?, ?, ?)", movie_title, user_rating, comments, username)
         reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
 
         poster_links = []
+        
         for review in reviews:    
             poster_link_value = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ? LIMIT 1", review["movie_title"])
 
