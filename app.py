@@ -4,24 +4,23 @@ from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required
 from datetime import datetime
 import requests
 
+# urls for APIs
 trending_url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1"
 image_url = "https://api.themoviedb.org/3/movie/movie_id/images"
 
+# headers for API for permissions
 headers = {
     "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NDMxMWM2MTVjODlmMjViMTVlZDZlYjc1ZmRlMmFmYSIsInN1YiI6IjY1NjY0ZmRhODlkOTdmMDEzOGZmMDNhZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qykkvQ8NKn0_RYyymcgtaiib3s9hnjvadRlSt1xftGk"
+    "Authorization": "Bearer eyJhbGßciOiJIUzI1NiJ9.eyJhdWQiOiI2NDMxMWM2MTVjODlmMjViMTVlZDZlYjc1ZmRlMmFmYSIsInN1YiI6IjY1NjY0ZmRhODlkOTdmMDEzOGZmMDNhZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qykkvQ8NKn0_RYyymcgtaiib3s9hnjvadRlSt1xftGk"
 }
 
 
 # Configure application
 app = Flask(__name__)
-
-# Custom filter
-app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -191,6 +190,7 @@ def form():
         # preferred_decade = int(request.form.get('sliderLength'))
         rating_str = request.form.get('rating')
 
+        # Check if a valid rating is provided
         if rating_str and rating_str.isdigit():
             rating = int(rating_str)
 
@@ -198,17 +198,20 @@ def form():
             genres = request.form.getlist('genre')
             if genres:
                 # Create a tuple of placeholders for the genres
-                genre_placeholders = ' OR '.join(['genre LIKE ?' for _ in genres])
-                query = f"SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ({genre_placeholders}) ORDER BY rating DESC LIMIT 10"
+                genre_placeholders = ' OR '.join(
+                    ['genre LIKE ?' for _ in genres])
+                query = f"SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ({genre_placeholders}) ORDER BY RANDOM() LIMIT 10"
                 try:
                     # Execute the query with parameters
-                    movies = moviesDB.execute(query, rating, preferred_length, *["%" + genre + "%" for genre in genres])
+                    movies = moviesDB.execute(
+                        query, rating, preferred_length, *["%" + genre + "%" for genre in genres])
                     return render_template("recommendation.html", movies=movies)
                 except Exception as e:
                     return render_template("form.html", message=f"Error: {e}")
+
+            # No genres selected, adjust the query accordingly
             else:
-                # No genres selected, adjust the query accordingly
-                query = "SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? ORDER BY rating DESC LIMIT 10"
+                query = "SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? ORDER BY RANDOM() LIMIT 10"
                 try:
                     # Execute the query with parameters
                     movies = moviesDB.execute(query, rating, preferred_length)
@@ -218,6 +221,8 @@ def form():
 
     # If it's a GET request or form submission failed, return the form template
     return render_template("form.html")
+
+# Enforce the user to fill out the form in order to get recommendations.
 
 
 @app.route("/recommendation", methods=["POST"])
@@ -229,43 +234,28 @@ def recommendation():
 @app.route("/trending")
 @login_required
 def trending():
+    # Parameters for calling the API
     params = {"language": "en-US", "page": 1}
 
     try:
         response = requests.get(trending_url, headers=headers, params=params)
         response.raise_for_status()  # Check for errors in the HTTP response
         data = response.json()
+
+        # data on the 10 most popular english movies
         en_movies = [movie for movie in data.get(
             "results", []) if movie.get("original_language") == "en"][:10]
 
         return render_template("trending.html", movies=en_movies)
 
-        # return data["results"]  # Extract the list of popular movies
+    # Return error if the API is down
     except requests.exceptions.RequestException as e:
         print(f"Error making API request: {e}")
         return None
 
-@app.route("/r", methods=["POST"])
-@login_required
-def rate_movie():
-    if request.method == "POST":
-        user_id = session["user_id"]
-        movie_id = request.form.get("movie_id")
-        user_rating = request.form.get("rating")
-
-        # Update database with the user's rating
-        db.execute("INSERT INTO movie_ratings (user_id, movie_id, rating) VALUES (?, ?, ?)",
-                   user_id, movie_id, user_rating)
-
-        # Redirect to the recommendations page 
-        return redirect("/recommendation")
-    
-    else:
-        return render_template("ratemovie.html")
 
 @app.route("/changepassword", methods=["GET", "POST"])
 def change_password():
-    # Change password
     # Ensure user is submitting a password change request
     if request.method == "POST":
         old_password = request.form.get("old_password")
@@ -294,67 +284,84 @@ def change_password():
     else:
         return render_template("changepassword.html")
 
+
 @app.route("/writereview", methods=["GET", "POST"])
 @login_required
 def write_review():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        # Gather user_id from the session and get the username
         user_id = session["user_id"]
         user = db.execute("SELECT * FROM users WHERE id = ?", user_id)
         username = user[0]["username"]
 
+        # Get the user input from the form
         movie_title = request.form.get('movieTitle')
         user_rating = int(request.form.get('rating'))
         comments = request.form.get('comments')
-        
-        # Fetch the poster link for the given movie title
-        # result = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ?", (movie_title,))
-        # Extract the poster link from the row
-        # poster_link = result.fetchone()['posterlink'] if result else None
 
-        moviesDB.execute("INSERT INTO MovieReviews (movie_title, user_rating, comments, username) VALUES (?, ?, ?, ?)", movie_title, user_rating, comments, username)
-        reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
-        
-        poster_links = []
-        
-        for review in reviews:    
-            poster_link_value = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ? LIMIT 1", review["movie_title"])
+        # Check to see if the movie the user input exists within our database (case ignored)
+        db_movie_title = moviesDB.execute(
+            "SELECT series_title FROM imdb_1000GOOD WHERE series_title COLLATE NOCASE = ? LIMIT 1", movie_title)
 
-            try: 
+        # If the movie does not exist, return an apology and encourage the user to try again.
+        if not db_movie_title:
+            return apology("Movie title was not found. Please check your spelling!", 403)
+
+        # Add the user review into the database
+        moviesDB.execute("INSERT INTO MovieReviews (movie_title, user_rating, comments, username) VALUES (?, ?, ?, ?)",
+                         db_movie_title[0]["series_title"], user_rating, comments, username)
+
+        # Select the 12 most recent reviews to display
+        reviews = moviesDB.execute(
+            "SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
+
+        poster_links = []  # Stores all the poster links to pass through to recommendations
+        for review in reviews:
+            # Check to see if the movie the user input exists within our database (case ignored)
+            poster_link_value = moviesDB.execute(
+                "SELECT posterlink FROM imdb_1000GOOD WHERE series_title COLLATE NOCASE = ? LIMIT 1", review["movie_title"])
+
+            try:
+                # Get the poster link and append it to the list.
                 poster_link = poster_link_value[0]["posterlink"]
                 poster_links.append(poster_link)
             except:
+                # If it does not exist, add default as a catch
                 poster_links.append("Default")
 
+        # Zip both the reviews and poster_links together to pass through to reviews.html
         return render_template("reviews.html", reviews=zip(reviews, poster_links))
-    
+
     else:
         return render_template("writereview.html")
+
 
 @app.route("/reviews", methods=["GET", "POST"])
 @login_required
 def reviews():
-    reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
-    
-    poster_links = []
-    for review in reviews:    
-        poster_link_value = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ? LIMIT 1", review["movie_title"])
+    # Retrieve the latest 12 reviews from the MovieReviews table, ordered by time
+    reviews = moviesDB.execute(
+        "SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
 
-        try: 
+    # Initialize an empty list to store poster links for each review
+    poster_links = []
+
+    # Iterate through each review
+    for review in reviews:
+        # Retrieve the poster link for the corresponding movie title
+        poster_link_value = moviesDB.execute(
+            "SELECT posterlink FROM imdb_1000GOOD WHERE series_title COLLATE NOCASE = ? LIMIT 1", review["movie_title"])
+
+        try:
+            # Attempt to extract the poster link from the query result
             poster_link = poster_link_value[0]["posterlink"]
             poster_links.append(poster_link)
         except:
+            # If an exception occurs (e.g., no poster link found), use a default value
             poster_links.append("Default")
 
-        # poster_link_cursor = moviesDB.execute("SELECT posterlink FROM imdb_1000GOOD WHERE series_title = ? LIMIT 1", (review["movie_title"],))
-        # poster_link_value = poster_link_cursor.fetchone()
-        
-        # # Append the value to poster_links (or use a default value if no match is found)
-        # poster_links.append(poster_link_value[0] if poster_link_value else "Default Poster Link")
-    
-    print(poster_links)
-    
-    # return render_template("reviews.html", reviews=reviews)
+    # Render the "reviews.html" template, passing in the reviews and corresponding poster links
     return render_template("reviews.html", reviews=zip(reviews, poster_links))
 
