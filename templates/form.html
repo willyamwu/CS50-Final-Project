@@ -229,9 +229,30 @@
       </label>
     </div>
 
+    <button class="btn btn-light" type="button" onclick="setDefaultValues()">Default</button>
     <button class="btn btn-light" type="submit">Submit</button>
   </form>
 </div>
+
+<script>
+  function setDefaultValues() {
+    // Set all genres to be checked
+    var genreCheckboxes = document.getElementsByName("genre");
+    genreCheckboxes.forEach(function (checkbox) {
+      checkbox.checked = true;
+    });
+  
+    // Set movie length to the default value
+    var lengthSlider = document.getElementById("valueSlider");
+    lengthSlider.value = 300;
+    var output = document.getElementById("sliderValue");
+    output.innerHTML = lengthSlider.value;
+
+    // Set rating to the default value
+    var ratingInput = document.getElementsByName("rating")[0];
+    ratingInput.value = "0";
+  }
+</script>
 
 <style>
   /* Apply a box-sizing reset for better layout control */
