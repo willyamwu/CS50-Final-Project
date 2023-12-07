@@ -299,7 +299,7 @@ def write_review():
 
         moviesDB.execute("INSERT INTO MovieReviews (movie_title, user_rating, comments, username) VALUES (?, ?, ?, ?)", movie_title, user_rating, comments, username)
         reviews = moviesDB.execute("SELECT * FROM MovieReviews ORDER BY time DESC LIMIT 12")
-
+        
         poster_links = []
         
         for review in reviews:    
@@ -312,6 +312,7 @@ def write_review():
                 poster_links.append("Default")
 
         return render_template("reviews.html", reviews=zip(reviews, poster_links))
+    
     else:
         return render_template("writereview.html")
 
