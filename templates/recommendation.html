@@ -2,10 +2,8 @@
 {% extends "layout.html" %} {% block title %} Index {% endblock %} {% block main
 %}
 <div class="background-box">
-<h1>Your Personalized Movie Recommendations</h1>
-
 {% if movies %}
-
+<h1>Your Personalized Movie Recommendations</h1>
 
   {% for movie in movies %}
   <div class="movie-card">
@@ -14,31 +12,9 @@
     <p class="card-text">Release Year: {{ movie.release_year }}</p>
     <p class="card-text">Director: {{ movie.director }}</p>
     <p class="card-text">Runtime: {{ movie.runtime }} minutes</p>
-    <p class="card-text">Genres: {{ movie.genre }}</p>
+    <p class="card-text">Genre(s): {{ movie.genre }}</p>
     <p class="card-text">{{ movie.overview }}</p>
-
   </div>
-<<<<<<< Updated upstream
-
-  {% endfor %}
-=======
->>>>>>> Stashed changes
-
-  <!-- RATING -->
-  <form action="/ratemovie" method="post">
-    <h2>Rating</h2>
-    <div class="checkbox-container">
-    <label for="rating">Rate this movie out of 5 (1 being "liked" and 5 being "disliked"):</label>
-    <select name="rating" id="rating">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-    </select>
-    <input type="hidden" name="movie_id" value="{{ movie.id }}">
-    <input type="submit" value="Submit Rating">
-  </form>
   {% endfor %}
 
 {% else %}

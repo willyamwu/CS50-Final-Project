@@ -189,34 +189,32 @@ def form():
     if request.method == "POST":
         preferred_length = int(request.form.get('valueSlider'))
         # preferred_decade = int(request.form.get('sliderLength'))
-        genres = request.form.getlist('genre')
-
-        # Check if 'rating' is a valid non-empty string
         rating_str = request.form.get('rating')
+
         if rating_str and rating_str.isdigit():
             rating = int(rating_str)
 
-            # Create a tuple of placeholders for the genres
-            genre_placeholders = ', '.join(['?' for _ in genres])
-
-            query = "SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ("
-
-            for genre in genres:
-                query += f"genre LIKE ? OR "
-
-            query = query[:-4]  # Remove the last ' OR '
-            query += ") ORDER BY rating DESC LIMIT 10"
-
-
-            try:
-                # Execute the query with parameters
-                movies = moviesDB.execute(query, rating, preferred_length, *
-                                          [f'%{genre}%' for genre in genres])
-
-                return render_template("recommendation.html", movies=movies)
-
-            except Exception as e:
-                return render_template("form.html", message=f"Error: {e}")
+            # Check if any genres are selected
+            genres = request.form.getlist('genre')
+            if genres:
+                # Create a tuple of placeholders for the genres
+                genre_placeholders = ' OR '.join(['genre LIKE ?' for _ in genres])
+                query = f"SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? AND ({genre_placeholders}) ORDER BY rating DESC LIMIT 10"
+                try:
+                    # Execute the query with parameters
+                    movies = moviesDB.execute(query, rating, preferred_length, *["%" + genre + "%" for genre in genres])
+                    return render_template("recommendation.html", movies=movies)
+                except Exception as e:
+                    return render_template("form.html", message=f"Error: {e}")
+            else:
+                # No genres selected, adjust the query accordingly
+                query = "SELECT * FROM imdb_1000GOOD WHERE rating >= ? AND runtime <= ? ORDER BY rating DESC LIMIT 10"
+                try:
+                    # Execute the query with parameters
+                    movies = moviesDB.execute(query, rating, preferred_length)
+                    return render_template("recommendation.html", movies=movies)
+                except Exception as e:
+                    return render_template("form.html", message=f"Error: {e}")
 
     # If it's a GET request or form submission failed, return the form template
     return render_template("form.html")
@@ -247,8 +245,6 @@ def trending():
         print(f"Error making API request: {e}")
         return None
 
-<<<<<<< Updated upstream
-=======
 @app.route("/r", methods=["POST"])
 @login_required
 def rate_movie():
@@ -267,7 +263,6 @@ def rate_movie():
     else:
         return render_template("ratemovie.html")
 
->>>>>>> Stashed changes
 @app.route("/changepassword", methods=["GET", "POST"])
 def change_password():
     # Change password

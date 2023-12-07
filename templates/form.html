@@ -1,10 +1,10 @@
-{% extends "layout.html" %} {% block title %} Movie Recommender {% endblock %}
+{% extends "layout.html" %} {% block title %} Form {% endblock %}
 {% block main %}
 <div class="background-box">
   <h1>Movie Preferences</h1>
   <p>Select filters that align with your preferences!</p>
 
-  <form action="/form" method="post">
+  <form id="movieForm" action="/form" method="post">
     <div class="horizontal-row">
       <h2>Genre</h2>
       <div class="checkbox-container">
@@ -224,13 +224,14 @@
     <div class="horizontal-row">
       <h2>Lowest Allowed Average Audience Rating</h2>
       <label>
-        Rating (1-10):
-        <input type="number" name="rating" min="1" max="10" step="1" />
+        Rating (0-10):
+        <input type="number" name="rating" min="0" max="10" step="1" value="5"/>
       </label>
     </div>
 
-    <button class="btn btn-light" type="button" onclick="setDefaultValues()">Default</button>
+    <button class="btn btn-light" type="button" onclick="setDefaultValues()">Select All</button>
     <button class="btn btn-light" type="submit">Submit</button>
+    <button class="btn btn-light" type="reset">Reset</button>
   </form>
 </div>
 
@@ -289,10 +290,16 @@
   document.addEventListener("DOMContentLoaded", function () {
     var slider = document.getElementById("valueSlider");
     var output = document.getElementById("sliderValue");
+    var resetButton = document.querySelector("button[type='reset']");
 
     slider.oninput = function () {
       output.innerHTML = slider.value;
     };
+
+    resetButton.addEventListener("click", function () {
+      slider.value = 150;
+      output.innerHTML = slider.value;
+    });
   });
 </script>
 
