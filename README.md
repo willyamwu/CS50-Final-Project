@@ -1,12 +1,14 @@
 # CS50-Final-Project
 
+Watch our final prject video [here](https://www.youtube.com/watch?v=cR-KygAolUo)!
+
 **Please note that our API KEY has been changed to a local environment variable to protect it from being stolen. We got out API Key stolen after publishing it on github. So, we had to find a way to temporarily protect it.**
 
 A website that gives you recommendations on what movies to watch next.
 
 ### ACCESSING THE PROJECT
 
-Provided in the submission is a zip file containing html, python, CSS, and SQLite database files. To access the project, unzip the file in Visual Studio Code and use “flask run” in the proper directory to access the server. You should be prompted with an http link with a format similar to [this](http://127.0.0.1:5000.).
+Provided in the submission is a zip file containing html, python, CSS, and SQLite database files. To access the project, unzip the file in Visual Studio Code and use “flask run” in the proper directory to access the server. You should be prompted with an http link with a format similar to this: (http://127.0.0.1:5000.).
 
 ### SIGNING UP AND LOGGING IN
 
