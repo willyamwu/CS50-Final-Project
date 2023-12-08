@@ -1,5 +1,7 @@
 # CS50-Final-Project
 
+**Please note that our API KEY has been changed to a local environment variable to protect it from being stolen. We got out API Key stolen after publishing it on github. So, we had to find a way to temporarily protect it.**
+
 A website that gives you recommendations on what movies to watch next.
 
 ### ACCESSING THE PROJECT

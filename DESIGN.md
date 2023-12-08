@@ -1,5 +1,7 @@
 # Movie Magic "Design"
 
+**Please note that our API KEY has been changed to a local environment variable to protect it from being stolen. We got out API Key stolen after publishing it on github. So, we had to find a way to temporarily protect it.**
+
 ## Overview
 Our project is a Flask-based web application designed to provide users with movie recommendations, enable them to write reviews, read reviews of others, and display trending movies. The technical implementation uses Python, Flask, JavaScript, HTML, CSS, SQL, in addition to an external [API](https://www.themoviedb.org/?language=en-US) integration and a database. The application follows a modular structure with routes handling specific functionalities, user authentication using the CS50 library, and interaction with SQL databases for storing user data and movie-related information.
 
