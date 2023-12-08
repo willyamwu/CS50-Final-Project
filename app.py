@@ -7,15 +7,18 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
 from datetime import datetime
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # urls for APIs
-trending_url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1"
+trending_url = "https://api.themoviedb.org/3/trending/all/day?language=en-US"
 image_url = "https://api.themoviedb.org/3/movie/movie_id/images"
 
 # headers for API for permissions
 headers = {
     "accept": "application/json",
-    "Authorization": "Bearer eyJhbGßciOiJIUzI1NiJ9.eyJhdWQiOiI2NDMxMWM2MTVjODlmMjViMTVlZDZlYjc1ZmRlMmFmYSIsInN1YiI6IjY1NjY0ZmRhODlkOTdmMDEzOGZmMDNhZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qykkvQ8NKn0_RYyymcgtaiib3s9hnjvadRlSt1xftGk"
+    "Authorization": os.environ['API_KEY']
 }
 
 
@@ -29,7 +32,6 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///users.db")
-# moviesDB = SQL("sqlite:///imdb-data.db")
 moviesDB = SQL("sqlite:///final_project_imdb.db")
 
 
