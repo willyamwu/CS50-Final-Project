@@ -1,6 +1,10 @@
-{% extends "layout.html" %} {% block title %} Trending {% endblock %} {%
-block main %}
+{% extends "layout.html" %}
 
+{% block title %}
+Trending
+{% endblock %}
+
+{% block main %}
 <div class="background-box">
   <h1>Trending Movies</h1>
   <p>These are the top trending movies in the U.S.</p>
@@ -17,24 +21,4 @@ block main %}
   </div>
   {% endfor %}
 </div>
-
-<!-- <div class="background-box">
-  <h2>Trending Movies</h2>
-  <div class="movie-container">
-    {% for movie in movies %}
-    <div class="movie-card">
-      <img
-        src="https://image.tmdb.org/t/p/original/{{ movie.poster_path }}"
-        alt="{{ movie.original_title }} Poster"
-        style="max-width: 100%; max-height: 300px"
-      />
-      <h2 style="color: black">{{ movie.title }}</h2>
-      <p style="color: black">Release Date: {{ movie.release_date }}</p>
-      <p style="color: black">{{ movie.overview }}</p>
-    </div>
-    {% if loop.index % 3 == 0 %}
-  </div>
-  <div class="movie-container">{% endif %} {% endfor %}</div>
-</div> -->
-
 {% endblock %}

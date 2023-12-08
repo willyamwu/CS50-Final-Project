@@ -9,7 +9,6 @@ import uuid
 from flask import redirect, render_template, session
 from functools import wraps
 
-
 def apology(message, code=400):
     """Render message as an apology to user."""
 
@@ -34,7 +33,6 @@ def apology(message, code=400):
 
     return render_template("apology.html", top=code, bottom=escape(message)), code
 
-
 def login_required(f):
     """
     Decorate routes to require login.
@@ -49,4 +47,3 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
-

@@ -21,7 +21,6 @@ headers = {
     "Authorization": os.environ['API_KEY']
 }
 
-
 # Configure application
 app = Flask(__name__)
 
@@ -366,4 +365,3 @@ def reviews():
 
     # Render the "reviews.html" template, passing in the reviews and corresponding poster links
     return render_template("reviews.html", reviews=zip(reviews, poster_links))
-

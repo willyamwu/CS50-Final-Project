@@ -1,4 +1,9 @@
-{% extends "layout.html" %} {% block title %} Form {% endblock %}
+{% extends "layout.html" %}
+
+{% block title %}
+Form
+{% endblock %}
+
 {% block main %}
 <div class="background-box">
   <h1>Movie Preferences</h1>
@@ -137,54 +142,6 @@
       </div>
     </div>
 
-    <!-- <div class="horizontal-row">
-      <h2>Choose a Decade</h2>
-      <div class="checkbox-container">
-        <label>
-          <input class="checkbox" type="checkbox" name="decade" value="2020" />
-          2020s
-        </label>
-        <label>
-          <input
-            class="checkbox"
-            type="checkbox"
-            name="decade"
-            value="2010"
-          />
-          2010s
-        </label>
-        <label>
-          <input
-            class="checkbox"
-            type="checkbox"
-            name="decade"
-            value="2000"
-          />
-          2000s
-        </label>
-        <label>
-          <input
-            class="checkbox"
-            type="checkbox"
-            name="decade"
-            value="1990"
-          />
-          1990s
-        </label>
-        <label>
-          <input class="checkbox" type="checkbox" name="decade" value="1980" />
-          1980s
-        </label>
-        <label>
-          <input class="checkbox" type="checkbox" name="decade" value="1970" />
-          1970s
-        </label>
-        <label>
-          <input class="checkbox" type="checkbox" name="decade" value="1960" />
-          1960s
-        </label>
-        </div> -->
-
     <div class="horizontal-row">
       <h2>Maximum Movie Length</h2>
       <label>
@@ -202,24 +159,6 @@
         <output id="sliderValue">150</output>
       </label>
     </div>
-
-    <!-- <div class="horizontal-row">
-      <h2>Decade Movie Was Released</h2>
-      <label>
-        Released (year):
-        <input
-          type="range"
-          id="lengthSlider"
-          name="lengthSlider"
-          min="1920"
-          max="2020"
-          step="10"
-          value="1970"
-          oninput="updateSliderValue(this.value)"
-        />
-        <output id="sliderLength">2020</output>
-      </label>
-    </div> -->
 
     <div class="horizontal-row">
       <h2>Lowest Allowed Average Audience Rating</h2>
@@ -302,5 +241,4 @@
     });
   });
 </script>
-
 {% endblock %}
